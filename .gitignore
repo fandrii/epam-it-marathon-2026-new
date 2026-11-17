@@ -1,0 +1,94 @@
+# IDEs, editors, and operating systems
+.idea/
+.vscode/
+*.iml
+*.code-workspace
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Local AI-agent and tool state
+.codex/
+.agents/
+
+# Environment variables, credentials, and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials
+credentials.*
+secrets/
+**/.aws/
+
+# Python virtual environments and caches
+.venv/
+venv/
+env/
+syndicate_venv/
+**/syndicate_venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# JavaScript / Angular dependencies and generated output
+node_modules/
+.angular/
+dist/
+coverage/
+*.tsbuildinfo
+*.css.map
+
+# .NET build and test output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Tt]est[Rr]esult*/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.binlog
+
+# Terraform local state, plans, overrides, and variable values
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+*.plan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+crash.log
+crash.*.log
+
+# AWS Syndicate generated files and local deployment backups
+**/.syndicate/
+**/bundles/
+**/logs/
+/artifacts/
+artifacts/
+*.zip
+*.bak
+*.backup
+
+# Generated runtime configuration
+frontend/restaurant-frontend-app/src/environments/environment.production.ts
+backend/restaurant-backend-app/scripts/demo_cognito_ids.json
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+~$*

@@ -1,0 +1,112 @@
+<app-modal title="" width="880px" (closed)="onClose()">
+  <header class="order-header">
+    <div class="title-row">
+      <h2>Group Pre-Order</h2>
+      <span class="status-pill" [class.sent]="groupStatus() === 'Submitted'">{{ statusLabel() }}</span>
+    </div>
+    @if (reservation(); as booking) {
+      <dl class="reservation-meta">
+        <div><img src="assets/svg/location-green.svg" alt="" /><dd>{{ booking.locationAddress }}</dd></div>
+        <div><img src="assets/svg/calendar-green.svg" alt="" /><dd>{{ booking.startTime | date: 'mediumDate' }}</dd></div>
+        <div><img src="assets/svg/clock-green.svg" alt="" /><dd>{{ booking.startTime | date: 'shortTime' }} – {{ booking.endTime | date: 'shortTime' }}</dd></div>
+        <div><img src="assets/svg/people-green.svg" alt="" /><dd>{{ booking.guestCount }} Guests</dd></div>
+      </dl>
+      @if (inviteLink() || inviteLoading()) {
+        <button type="button" class="copy-link" [disabled]="!inviteLink()" (click)="copyInviteLink()">
+          {{ inviteCopied() ? 'Copied!' : inviteLoading() ? 'Loading invite link…' : 'Copy invite link' }}
+        </button>
+      } @else if (inviteUnavailable()) {
+        <span class="invite-unavailable">Invitation link unavailable</span>
+      }
+    }
+  </header>
+
+  @if (groupStatus() === 'Open' && waitingGuest(); as guest) {
+    <div class="waiting-notice" role="status">
+      <img src="assets/svg/bell-regular.svg" alt="" />
+      <span><strong>{{ guest.name }}</strong> has filled their pre-order and is waiting for you to submit.</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <p class="state-message" role="status">Loading participants and dishes...</p>
+  } @else if (error()) {
+    <div class="state-message" role="alert"><p>{{ error() }}</p>
+      <button type="button" class="button button--secondary" (click)="loadGroupSessions()">Try again</button>
+    </div>
+  } @else if (summary(); as group) {
+    <div class="participants">
+      @if (owner(); as participant) {
+        <article class="participant owner-card">
+          <header class="participant-header"><h3>My Pre-Order</h3>
+            @if (groupStatus() === 'Open') {
+              <a class="text-action" routerLink="/menu" (click)="onClose()"
+                [queryParams]="{ preOrder: 'true', groupPreOrder: 'true', reservationId: reservationId() }">Edit my Pre-Order</a>
+            }
+          </header>
+          <ng-container *ngTemplateOutlet="items; context: { $implicit: participant }" />
+        </article>
+      }
+
+      @for (participant of guests(); track participant.id ?? participant.name) {
+        <article class="participant guest-card">
+          <header class="participant-header"><h3>Guest: {{ participant.name }}</h3>
+            @if (groupStatus() === 'Open') {
+              <button type="button" class="text-action danger remove-participant" [disabled]="!!removingSessionId()"
+                (click)="removeParticipant(participant.id, participant.name)">Remove Guest</button>
+            }
+          </header>
+          <ng-container *ngTemplateOutlet="items; context: { $implicit: participant }" />
+        </article>
+      }
+
+      @if (!group.participants.length) { <p class="state-message">No participants have joined this group order yet.</p> }
+    </div>
+
+    <section class="grand-total"><span>Grand Total</span><strong>{{ group.total | currency: 'USD' }}</strong></section>
+    @if (groupStatus() === 'Closed') {
+      <p class="submitted-message" role="status">This group pre-order is closed.</p>
+    } @else if (!canConfirm()) {
+      <p class="readiness-message" role="status">Every participant must submit their pre-order before confirmation.</p>
+    }
+  }
+
+  @if (confirmationError()) { <p class="error-message" role="alert">{{ confirmationError() }}</p> }
+  @if (removalError()) { <p class="error-message" role="alert">{{ removalError() }}</p> }
+
+  <div modal-actions class="group-actions">
+    <button type="button" class="button button--primary submit-order" [disabled]="!canConfirm()" (click)="confirmGroupPreOrder()">
+      {{ confirming() ? 'Submitting...' : 'Submit Pre-Order' }}
+    </button>
+  </div>
+</app-modal>
+
+<ng-template #items let-participant>
+  @if (participant.items.length) {
+    <ul class="items">
+      @for (item of participant.items; track item.dish.id) {
+        <li><img src="assets/img/dish.png" alt="" /><div class="dish-copy"><strong>{{ item.dish.name }}</strong></div>
+          <span class="quantity">{{ item.quantity }}</span><strong>{{ item.dish.price * item.quantity | currency: 'USD' }}</strong></li>
+      }
+    </ul>
+  } @else { <p class="no-items">No dishes added.</p> }
+  <footer class="participant-total"><span>Subtotal</span><strong>{{ participant.total | currency: 'USD' }}</strong></footer>
+</ng-template>
+
+@if (pendingRemoval(); as guest) {
+  <div class="confirm-backdrop" role="presentation" (click)="cancelRemoval()">
+    <section class="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="remove-guest-title" (click)="$event.stopPropagation()">
+      <button type="button" class="dialog-close" aria-label="Close remove guest confirmation" [disabled]="!!removingSessionId()" (click)="cancelRemoval()">
+        <img src="assets/svg/close.svg" alt="" />
+      </button>
+      <h2 id="remove-guest-title">Remove Guest</h2>
+      <p>Are you sure you want to remove {{ guest.name }} and their pre-order from this reservation? This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button type="button" class="button button--secondary" [disabled]="!!removingSessionId()" (click)="cancelRemoval()">Cancel</button>
+        <button type="button" class="button button--primary danger-button" [disabled]="!!removingSessionId()" (click)="confirmRemoval()">
+          {{ removingSessionId() ? 'Removing...' : 'Remove Guest' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

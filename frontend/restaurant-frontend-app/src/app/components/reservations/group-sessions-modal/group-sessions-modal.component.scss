@@ -1,0 +1,63 @@
+@use 'app/shared/styles/abstracts/colors' as color;
+
+::ng-deep .modal-card { background: color.$neutral-100; }
+::ng-deep .modal-body { gap: 1.25rem; }
+.order-header { padding-bottom: 1rem; border-bottom: 1px solid color.$sage-100; }
+.title-row { display: flex; align-items: center; gap: .75rem; padding-right: 2rem; }
+.title-row h2 { margin: 0; color: color.$neutral-900; font-size: 1.75rem; font-weight: 500; line-height: 1.25; }
+.status-pill { display: inline-flex; padding: .3rem .75rem; color: color.$neutral-700; background: color.$neutral-200; border-radius: .5rem; font-size: .75rem; font-weight: 400; }
+.status-pill.sent { color: color.$neutral-700; background: color.$orange-100; }
+.reservation-meta { display: flex; flex-wrap: wrap; gap: .875rem 1.5rem; margin: 1rem 0 0; }
+.reservation-meta div { display: flex; align-items: center; gap: .5rem; min-width: 0; }
+.reservation-meta img { width: 1rem; height: 1rem; }
+.reservation-meta dd { margin: 0; overflow-wrap: anywhere; color: color.$neutral-700; font-size: .875rem; }
+.copy-link, .text-action { padding: 0; border: 0; color: color.$green-600; background: transparent; font: inherit; font-weight: 600; cursor: pointer; }
+.copy-link { margin-top: 1rem; }
+.invite-unavailable { display: block; margin-top: 1rem; color: color.$neutral-600; font-size: .875rem; }
+.copy-link:disabled { color: color.$neutral-400; cursor: default; }
+.waiting-notice { display: flex; align-items: center; gap: .75rem; padding: .875rem 1rem; border: 1px solid color.$orange-100; border-radius: .5rem; background: color.$orange-30; color: color.$neutral-700; font-size: .875rem; }
+.waiting-notice img { width: 1.25rem; height: 1.25rem; }
+.waiting-notice strong { text-decoration: underline; }
+.participants { display: flex; flex-direction: column; gap: 1.5rem; max-height: 58vh; overflow-y: auto; padding-right: .25rem; }
+.participant { padding: 1rem; border: 0; border-radius: .75rem; background: color.$neutral-0; }
+.participant-header, .participant-total, .grand-total, .items li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.participant-header h3 { margin: 0; font-size: 1.125rem; font-weight: 500; }
+.text-action { color: color.$neutral-900; text-decoration: underline; text-underline-offset: .5rem; }
+.text-action.danger { color: #a32929; }
+.items { display: flex; flex-direction: column; margin: 1rem 0; padding: 0; list-style: none; }
+.items li { min-height: 3.5rem; padding: .5rem .75rem; border-bottom: 1px solid color.$neutral-100; }
+.items img { width: 3rem; height: 3rem; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
+.dish-copy { display: flex; flex: 1; flex-direction: column; gap: .25rem; min-width: 0; }
+.dish-copy span, .no-items, .state-message, .readiness-message { color: color.$neutral-600; }
+.quantity { min-width: 2rem; text-align: center; }
+.participant-total { padding: 1rem .75rem 0; border-top: 1px solid color.$neutral-100; font-size: 1.05rem; }
+.grand-total { margin-top: 0; padding: 1.25rem 0 .25rem; border-top: 2px solid color.$sage-100; color: color.$neutral-900; background: transparent; font-size: 1.65rem; }
+.grand-total strong { color: color.$green-800; font-weight: 500; }
+.submitted-message { padding: .875rem 1rem; color: color.$green-800; background: color.$green-100; border-radius: .75rem; }
+.error-message { color: #a32929; }
+.group-actions { display: block; width: 100%; }
+.submit-order { width: 100%; min-height: 3.5rem; }
+.submit-order:disabled { color: color.$neutral-100; background: color.$neutral-400; border-color: color.$neutral-400; }
+.confirm-backdrop { position: fixed; z-index: 1100; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(0 0 0 / 55%); }
+.confirm-dialog { position: relative; width: min(32rem, 100%); padding: 2.5rem; border-radius: 1.5rem; background: color.$neutral-0; box-shadow: 0 1.25rem 3rem rgb(0 0 0 / 20%); }
+.confirm-dialog h2 { margin: 0 0 1.75rem; font-size: 1.65rem; font-weight: 500; }
+.confirm-dialog p { margin: 0; color: color.$neutral-700; line-height: 1.5; }
+.dialog-close { position: absolute; top: 1.25rem; right: 1.25rem; padding: .25rem; border: 0; background: transparent; cursor: pointer; }
+.dialog-close img { width: 1.25rem; height: 1.25rem; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.75rem; }
+.confirm-actions .button--secondary { padding-inline: .5rem; border: 0; border-bottom: 1px solid color.$neutral-900; border-radius: 0; background: transparent; }
+.danger-button { color: color.$red-400; background: transparent; border: 1px solid color.$red-400; }
+
+@media (max-width: 700px) {
+  .participants { max-height: none; }
+  .participant-header { align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .modal-card { padding: 1.25rem; border-radius: 1rem; }
+  .title-row { align-items: flex-start; flex-direction: column; gap: .5rem; }
+  .reservation-meta { align-items: flex-start; flex-direction: column; }
+  .participant-header, .items li, .group-actions, .confirm-actions { align-items: stretch; flex-direction: column; }
+  .items li > strong { align-self: flex-end; }
+  .group-actions .button, .confirm-actions .button { width: 100%; }
+}
